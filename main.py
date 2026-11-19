@@ -1,14 +1,20 @@
-"""News-image entry: copy the finished front page to the output directory.
+#!/usr/bin/env python3
+"""Write the finished front page to the grader's output directory.
 
-Pure standard library. The grader runs this with no network; it writes the
-same bytes on every run because it only copies entry.png.
+Standard library only, no network. The PNG is fixed at build time, so every
+run writes exactly the same bytes.
 """
 import os
-import shutil
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
-# Outside the grader, MAKEFUN_OUTPUT_DIR stands in for /output.
-OUT = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
-OUT.mkdir(parents=True, exist_ok=True)
-shutil.copyfile(HERE / "entry.png", OUT / "entry.png")
+SOURCE = Path(__file__).resolve().parent / "entry.png"
+
+
+def main():
+    target_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
+    target_dir.mkdir(parents=True, exist_ok=True)
+    (target_dir / "entry.png").write_bytes(SOURCE.read_bytes())
+
+
+if __name__ == "__main__":
+    main()
